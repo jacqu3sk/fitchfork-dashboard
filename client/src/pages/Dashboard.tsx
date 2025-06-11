@@ -1,14 +1,16 @@
-import { Typography, Row, Col, Switch, Space } from "antd";
+import { Typography, Row, Col, Switch, Space, message } from "antd";
 import { useEffect, useState } from "react";
-import axios from "axios";
-import { message } from "antd";
-import CommandPanel from "../components/CommandPanel";
-import LogsPanel from "../components/LogsPanel";
-import ServiceManager from "../components/ServiceManager";
-import SystemStatusCard from "../components/SystemStatusCard";
-import type { SystemStatus } from "../types/system";
 
-const API_BASE = import.meta.env.VITE_ADMIN_API_URL;
+import type { SystemStatus } from "../types/system";
+import {
+	fetchSystemStatus,
+	fetchLogs,
+	runAdminCommand,
+} from "@/services/admin";
+import CommandPanel from "@/components/CommandPanel";
+import LogsPanel from "@/components/LogsPanel";
+import ServiceManager from "@/components/ServiceManager";
+import SystemStatusCard from "@/components/SystemStatusCard";
 
 export default function Dashboard() {
 	const [status, setStatus] = useState<SystemStatus | null>(null);
@@ -22,8 +24,8 @@ export default function Dashboard() {
 
 	const loadStatus = async () => {
 		try {
-			const res = await axios.get(`${API_BASE}/status`);
-			setStatus(res.data);
+			const data = await fetchSystemStatus();
+			setStatus(data);
 		} catch {
 			message.error("Failed to load system status");
 		}
@@ -31,8 +33,8 @@ export default function Dashboard() {
 
 	const loadLogs = async () => {
 		try {
-			const res = await axios.get(`${API_BASE}/logs`);
-			setLogs(res.data.logs);
+			const logData = await fetchLogs();
+			setLogs(logData);
 		} catch {
 			message.error("Failed to load logs");
 		}
@@ -40,11 +42,11 @@ export default function Dashboard() {
 
 	const runCommand = async (command: string) => {
 		try {
-			const res = await axios.post(`${API_BASE}/run`, { command });
-			message.success(res.data.result || "Command executed");
-		} catch (err: unknown) {
-			if (axios.isAxiosError(err) && err.response?.data?.error) {
-				message.error(err.response.data.error);
+			const result = await runAdminCommand(command);
+			message.success(result || "Command executed");
+		} catch (err) {
+			if (err instanceof Error) {
+				message.error(err.message);
 			} else {
 				message.error("Command failed");
 			}
