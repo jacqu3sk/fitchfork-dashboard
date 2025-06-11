@@ -53,7 +53,7 @@ export default function Dashboard() {
 		let interval: number | undefined;
 
 		if (autoRefresh) {
-			interval = window.setInterval(loadStatus, 10000);
+			interval = window.setInterval(loadStatus, 1000);
 		}
 
 		return () => {
