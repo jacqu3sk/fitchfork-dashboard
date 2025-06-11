@@ -50,11 +50,15 @@ export default function Dashboard() {
 		loadStatus();
 		loadLogs();
 
-		let interval: ReturnType<typeof setInterval> | undefined;
+		let interval: number | undefined;
+
 		if (autoRefresh) {
-			interval = setInterval(loadStatus, 10000);
+			interval = window.setInterval(loadStatus, 10000);
 		}
-		return () => interval && clearInterval(interval);
+
+		return () => {
+			if (interval !== undefined) clearInterval(interval);
+		};
 	}, [autoRefresh]);
 
 	return (
