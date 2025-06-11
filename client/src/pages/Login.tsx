@@ -26,7 +26,7 @@ export default function Login() {
 		setFormError(null);
 		const res = await login(values);
 		if (res.success) {
-			navigate("/home");
+			navigate("/");
 		} else {
 			setFormError(res.message);
 		}
