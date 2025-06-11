@@ -46,19 +46,35 @@ export default function SystemStatusCard({
 					<Descriptions.Item label="Uptime">
 						<Tag color="blue">{formatUptime(status.uptime)}</Tag>
 					</Descriptions.Item>
+
 					<Descriptions.Item label="Memory Usage">
 						<Tag color="geekblue">
 							{status.memUsedMB} / {status.memTotalMB} MB
 						</Tag>
 					</Descriptions.Item>
+
 					<Descriptions.Item label="Load Average">
 						<Tag>{status.load.map((l) => l.toFixed(2)).join(" / ")}</Tag>
 					</Descriptions.Item>
+
 					{status.cpuCores && (
 						<Descriptions.Item label="CPU Cores">
 							<Tag>{status.cpuCores}</Tag>
 						</Descriptions.Item>
 					)}
+
+					{/* {status.cpuUsagePercent !== undefined && (
+						<Descriptions.Item label="CPU Usage">
+							<Tag color="purple">{status.cpuUsagePercent.toFixed(1)}%</Tag>
+						</Descriptions.Item>
+					)} */}
+
+					{status.cpuTemp && (
+						<Descriptions.Item label="CPU Temp">
+							<Tag color="red">{status.cpuTemp}</Tag>
+						</Descriptions.Item>
+					)}
+
 					{status.diskUsedMB && status.diskTotalMB && (
 						<Descriptions.Item label="Disk Usage">
 							<Tag color="orange">

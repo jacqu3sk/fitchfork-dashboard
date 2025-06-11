@@ -6,4 +6,5 @@ export interface SystemStatus {
 	cpuCores?: number;
 	diskUsedMB?: string;
 	diskTotalMB?: string;
+	cpuTemp?: string;
 }

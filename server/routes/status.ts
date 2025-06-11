@@ -3,8 +3,9 @@ import { getSystemStatus } from "../utils/systemInfo";
 
 const router = Router();
 
-router.get("/", (_req, res) => {
-	res.json(getSystemStatus());
+router.get("/", async (_req, res) => {
+	const status = await getSystemStatus();
+	res.json(status);
 });
 
 export default router;
