@@ -1,15 +1,7 @@
 import { Card, Button } from "antd";
 
-const sampleLogs = `
-[2025-06-11 14:32:01] INFO  Server started on port 8080
-[2025-06-11 14:32:02] DEBUG AuthService: verifying token...
-[2025-06-11 14:32:02] INFO  AuthService: user 1024 authenticated
-[2025-06-11 14:32:03] WARN  Disk space at 90% capacity
-[2025-06-11 14:32:04] ERROR Database: failed to connect to replica set
-[2025-06-11 14:32:05] INFO  Retry scheduled in 5 seconds
-`;
-
 export default function LogsPanel({
+	logs,
 	onRefresh,
 }: {
 	logs?: string;
@@ -33,7 +25,7 @@ export default function LogsPanel({
 					whiteSpace: "pre-wrap",
 				}}
 			>
-				{sampleLogs}
+				{logs ?? "No logs found."}
 			</pre>
 		</Card>
 	);
