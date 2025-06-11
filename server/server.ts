@@ -8,8 +8,9 @@ import logsRoutes from "./routes/logs";
 import runRoutes from "./routes/run";
 import servicesRoutes from "./routes/services";
 import { requireAuth } from "./middleware/auth";
+import path from "path";
 
-dotenv.config();
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
 const HOST = process.env.HOST || "127.0.0.1";
