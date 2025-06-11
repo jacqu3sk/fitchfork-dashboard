@@ -1,9 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import {
-	AuthService,
-	type LoginRequest,
-	type LoginResponse,
-} from "@/services/auth";
+import { AuthService } from "@/services/auth";
+import type { LoginRequest, LoginResponse } from "@/services/auth";
 import type { ApiResponse } from "@/utils/api";
 
 interface AuthContextType {
@@ -23,16 +20,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		const load = async () => {
-			const stored = localStorage.getItem("auth");
-			if (!stored) {
-				setLoading(false);
-				return;
-			}
+		const stored = localStorage.getItem("auth");
+		if (!stored) {
 			setLoading(false);
-		};
+			return;
+		}
 
-		load();
+		try {
+			const { token, expires_at } = JSON.parse(stored);
+			if (token && expires_at && new Date(expires_at) > new Date()) {
+				setAuthenticated(true);
+			} else {
+				localStorage.removeItem("auth");
+			}
+		} catch {
+			localStorage.removeItem("auth");
+		}
+
+		setLoading(false);
 	}, []);
 
 	const login = async (
@@ -42,7 +47,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			const res = await AuthService.login(request);
 			if (res.success && res.data) {
 				const { token, expiresIn } = res.data;
-				localStorage.setItem("auth", JSON.stringify({ token, expiresIn }));
+
+				localStorage.setItem(
+					"auth",
+					JSON.stringify({
+						token,
+						expires_at: expiresIn,
+					})
+				);
+
 				setAuthenticated(true);
 			}
 			return res;
