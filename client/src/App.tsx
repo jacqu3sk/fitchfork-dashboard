@@ -25,7 +25,7 @@ export default function App() {
 						needsLogin ? <Navigate to="/login" replace /> : <AppLayout />
 					}
 				>
-					<Route path="/" element={<Dashboard />} />
+					<Route path="/dashboard" element={<Dashboard />} />
 					<Route path="/services" element={<Services />} />
 				</Route>
 			</Routes>
