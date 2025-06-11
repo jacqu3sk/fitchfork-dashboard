@@ -13,7 +13,7 @@ import { useAuth } from "@/context/AuthContext";
 
 const menuItems = [
 	{
-		key: "/",
+		key: "/dashboard",
 		label: "Dashboard",
 		icon: <DashboardOutlined />,
 	},
