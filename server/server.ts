@@ -19,11 +19,11 @@ app.use(cors());
 app.use(express.json());
 
 // Public route (login)
-app.use("/api/login", loginRoute);
+app.use("/api/auth/login", loginRoute);
 
 // Apply auth to everything else
 app.use((req, res, next) => {
-	if (req.path.startsWith("/api/login")) {
+	if (req.path.startsWith("/api/auth/login")) {
 		return next(); // bypass auth for login
 	}
 	return requireAuth(req, res, next);
