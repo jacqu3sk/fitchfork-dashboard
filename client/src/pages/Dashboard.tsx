@@ -1,4 +1,4 @@
-import { Typography, Row, Col } from "antd";
+import { Typography, Row, Col, Switch, Space } from "antd";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { message } from "antd";
@@ -13,7 +13,12 @@ const API_BASE = import.meta.env.VITE_ADMIN_API_URL;
 export default function Dashboard() {
 	const [status, setStatus] = useState<SystemStatus | null>(null);
 	const [logs, setLogs] = useState<string>("");
-	const [autoRefresh, setAutoRefresh] = useState(false);
+	const [autoRefresh, setAutoRefresh] = useState(
+		localStorage.getItem("autoRefreshStatus") === "true"
+	);
+	const [autoRefreshLogs, setAutoRefreshLogs] = useState(
+		localStorage.getItem("autoRefreshLogs") === "true"
+	);
 
 	const loadStatus = async () => {
 		try {
@@ -50,16 +55,29 @@ export default function Dashboard() {
 		loadStatus();
 		loadLogs();
 
-		let interval: number | undefined;
+		let statusInterval: number | undefined;
+		let logsInterval: number | undefined;
 
 		if (autoRefresh) {
-			interval = window.setInterval(loadStatus, 1000);
+			statusInterval = window.setInterval(loadStatus, 1000);
+		}
+		if (autoRefreshLogs) {
+			logsInterval = window.setInterval(loadLogs, 3000);
 		}
 
 		return () => {
-			if (interval !== undefined) clearInterval(interval);
+			if (statusInterval) clearInterval(statusInterval);
+			if (logsInterval) clearInterval(logsInterval);
 		};
+	}, [autoRefresh, autoRefreshLogs]);
+
+	useEffect(() => {
+		localStorage.setItem("autoRefreshStatus", autoRefresh.toString());
 	}, [autoRefresh]);
+
+	useEffect(() => {
+		localStorage.setItem("autoRefreshLogs", autoRefreshLogs.toString());
+	}, [autoRefreshLogs]);
 
 	return (
 		<div className="p-6">
@@ -80,6 +98,14 @@ export default function Dashboard() {
 				</Col>
 
 				<Col span={24}>
+					<Space style={{ marginBottom: 12 }}>
+						<Switch
+							checked={autoRefreshLogs}
+							onChange={setAutoRefreshLogs}
+							checkedChildren="Logs: Auto"
+							unCheckedChildren="Logs: Manual"
+						/>
+					</Space>
 					<LogsPanel logs={logs} onRefresh={loadLogs} />
 				</Col>
 
