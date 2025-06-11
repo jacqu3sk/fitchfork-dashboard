@@ -11,7 +11,7 @@ import {
 } from "antd";
 import axios from "axios";
 
-const API = "http://localhost:4000/api"; // Change in production
+const API = "http://localhost:4000/__admin"; // Change in production
 
 interface SystemStatus {
 	uptime: number;
