@@ -1,122 +1,82 @@
+import { Typography, Row, Col } from "antd";
 import { useEffect, useState } from "react";
-import {
-	Card,
-	Button,
-	Typography,
-	Row,
-	Col,
-	Space,
-	Descriptions,
-	Tag,
-} from "antd";
 import axios from "axios";
+import { message } from "antd";
+import CommandPanel from "../components/CommandPanel";
+import LogsPanel from "../components/LogsPanel";
+import ServiceManager from "../components/ServiceManager";
+import SystemStatusCard from "../components/SystemStatusCard";
+import type { SystemStatus } from "../types/system";
 
-const API = "http://localhost:4000/__admin"; // Change in production
-
-interface SystemStatus {
-	uptime: number;
-	load: [number, number, number];
-	memUsedMB: string;
-	memTotalMB: string;
-}
-
-function formatUptime(seconds: number): string {
-	const hrs = Math.floor(seconds / 3600);
-	const mins = Math.floor((seconds % 3600) / 60);
-	return `${hrs}h ${mins}m`;
-}
+const API_BASE = import.meta.env.VITE_ADMIN_API_URL;
 
 export default function Dashboard() {
 	const [status, setStatus] = useState<SystemStatus | null>(null);
 	const [logs, setLogs] = useState<string>("");
+	const [autoRefresh, setAutoRefresh] = useState(false);
 
 	const loadStatus = async () => {
-		const res = await axios.get(`${API}/status`);
-		setStatus(res.data);
+		try {
+			const res = await axios.get(`${API_BASE}/status`);
+			setStatus(res.data);
+		} catch {
+			message.error("Failed to load system status");
+		}
 	};
 
 	const loadLogs = async () => {
-		const res = await axios.get(`${API}/logs`);
-		setLogs(res.data.logs);
+		try {
+			const res = await axios.get(`${API_BASE}/logs`);
+			setLogs(res.data.logs);
+		} catch {
+			message.error("Failed to load logs");
+		}
 	};
 
 	const runCommand = async (command: string) => {
-		const res = await axios.post(`${API}/run`, { command });
-		alert(res.data.result || res.data.error);
+		try {
+			const res = await axios.post(`${API_BASE}/run`, { command });
+			message.success(res.data.result || "Command executed");
+		} catch (err: any) {
+			message.error(err?.response?.data?.error || "Command failed");
+		}
 	};
 
 	useEffect(() => {
 		loadStatus();
 		loadLogs();
-	}, []);
+
+		let interval: NodeJS.Timeout | undefined;
+		if (autoRefresh) {
+			interval = setInterval(loadStatus, 10000);
+		}
+		return () => interval && clearInterval(interval);
+	}, [autoRefresh]);
 
 	return (
-		<div style={{ padding: 24 }}>
-			<Typography.Title level={2} style={{ marginBottom: 24 }}>
-				FitchFork Server Dashboard
-			</Typography.Title>
+		<div className="p-6">
+			<Typography.Title level={2}>FitchFork Server Dashboard</Typography.Title>
 
 			<Row gutter={[24, 24]}>
 				<Col xs={24} md={12}>
-					<Card
-						title="System Status"
-						extra={<Button onClick={loadStatus}>Refresh</Button>}
-					>
-						{status ? (
-							<Descriptions column={1} size="small" bordered>
-								<Descriptions.Item label="Uptime">
-									<Tag color="blue">{formatUptime(status.uptime)}</Tag>
-								</Descriptions.Item>
-								<Descriptions.Item label="Memory Usage">
-									<Tag color="geekblue">
-										{status.memUsedMB} / {status.memTotalMB} MB
-									</Tag>
-								</Descriptions.Item>
-								<Descriptions.Item label="Load Average">
-									<Tag>{status.load.map((l) => l.toFixed(2)).join(" / ")}</Tag>
-								</Descriptions.Item>
-							</Descriptions>
-						) : (
-							<Typography.Text type="secondary">Loading...</Typography.Text>
-						)}
-					</Card>
+					<SystemStatusCard
+						status={status}
+						onRefresh={loadStatus}
+						autoRefresh={autoRefresh}
+						setAutoRefresh={setAutoRefresh}
+					/>
 				</Col>
 
 				<Col xs={24} md={12}>
-					<Card title="Commands">
-						<Space direction="vertical">
-							<Button
-								type="primary"
-								onClick={() => runCommand("restart-backend")}
-								block
-							>
-								Restart Backend
-							</Button>
-							<Button onClick={() => runCommand("pull-latest")} block>
-								Git Pull Latest
-							</Button>
-						</Space>
-					</Card>
+					<CommandPanel onRunCommand={runCommand} />
 				</Col>
 
 				<Col span={24}>
-					<Card
-						title="Recent Logs"
-						extra={<Button onClick={loadLogs}>Refresh</Button>}
-					>
-						<pre
-							style={{
-								background: "#111",
-								color: "#0f0",
-								padding: "1rem",
-								borderRadius: 4,
-								overflowX: "auto",
-								maxHeight: 300,
-							}}
-						>
-							{logs || "No logs loaded."}
-						</pre>
-					</Card>
+					<LogsPanel logs={logs} onRefresh={loadLogs} />
+				</Col>
+
+				<Col span={24}>
+					<ServiceManager />
 				</Col>
 			</Row>
 		</div>
