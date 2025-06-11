@@ -10,7 +10,6 @@ const sampleLogs = `
 `;
 
 export default function LogsPanel({
-	logs = sampleLogs,
 	onRefresh,
 }: {
 	logs?: string;
