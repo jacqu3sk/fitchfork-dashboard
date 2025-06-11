@@ -37,8 +37,12 @@ export default function Dashboard() {
 		try {
 			const res = await axios.post(`${API_BASE}/run`, { command });
 			message.success(res.data.result || "Command executed");
-		} catch (err: any) {
-			message.error(err?.response?.data?.error || "Command failed");
+		} catch (err: unknown) {
+			if (axios.isAxiosError(err) && err.response?.data?.error) {
+				message.error(err.response.data.error);
+			} else {
+				message.error("Command failed");
+			}
 		}
 	};
 
@@ -46,7 +50,7 @@ export default function Dashboard() {
 		loadStatus();
 		loadLogs();
 
-		let interval: NodeJS.Timeout | undefined;
+		let interval: ReturnType<typeof setInterval> | undefined;
 		if (autoRefresh) {
 			interval = setInterval(loadStatus, 10000);
 		}
