@@ -3,6 +3,7 @@ import {
 	PlayCircleOutlined,
 	StopOutlined,
 	ReloadOutlined,
+	SyncOutlined,
 } from "@ant-design/icons";
 import type { Service } from "../types/service";
 import { runCommand } from "@/services/commands";
@@ -26,6 +27,21 @@ export default function ServiceCard({
 			setTimeout(onRefresh, 2000);
 		} catch {
 			message.error({ content: `Failed: ${commandKey}`, key: service.name });
+		}
+	};
+
+	const updateService = async () => {
+		try {
+			const commandKey = `update-${service.name}`;
+			message.loading({ content: `Running ${commandKey}...`, key: commandKey });
+			await runCommand(commandKey);
+			message.success({ content: `Success: ${commandKey}`, key: commandKey });
+			setTimeout(onRefresh, 2000);
+		} catch {
+			message.error({
+				content: `Failed: update-${service.name}`,
+				key: `update-${service.name}`,
+			});
 		}
 	};
 
@@ -86,6 +102,15 @@ export default function ServiceCard({
 							onClick={() => toggleService("restart")}
 						>
 							Restart
+						</Button>
+					</Tooltip>
+					<Tooltip title="Check for Git Updates & Rebuild">
+						<Button
+							icon={<SyncOutlined />}
+							type="dashed"
+							onClick={updateService}
+						>
+							Update
 						</Button>
 					</Tooltip>
 				</Space>
