@@ -34,11 +34,11 @@ export default function CommandPanel() {
 					block
 					type="primary"
 					icon={<SyncOutlined />}
-					loading={loadingCmd === "restart-backend"}
-					onClick={() => handle("restart-backend")}
+					loading={loadingCmd === "restart-fitchfork"}
+					onClick={() => handle("restart-fitchfork")}
 					className="font-semibold"
 				>
-					Restart Backend
+					Restart FitchFork API
 				</Button>
 
 				<Button
