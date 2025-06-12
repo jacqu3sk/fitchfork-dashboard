@@ -32,23 +32,33 @@ export default function SystemStatusCard({
 		>
 			{status ? (
 				<Descriptions column={1} size="small" bordered>
-					<Descriptions.Item label="Uptime">
-						<Tag color="blue">{formatUptime(status.uptime)}</Tag>
+					<Descriptions.Item label="Hostname">
+						<Tag>{status.hostname}</Tag>
 					</Descriptions.Item>
 
-					<Descriptions.Item label="Memory Usage">
-						<Tag color="geekblue">
-							{status.memUsedMB} / {status.memTotalMB} MB
+					<Descriptions.Item label="Platform">
+						<Tag>
+							{status.platform} / {status.arch}
 						</Tag>
 					</Descriptions.Item>
 
-					<Descriptions.Item label="Load Average">
-						<Tag>{status.load.map((l) => l.toFixed(2)).join(" / ")}</Tag>
+					<Descriptions.Item label="Node Version">
+						<Tag>{status.nodeVersion}</Tag>
 					</Descriptions.Item>
 
-					{status.cpuCores && (
-						<Descriptions.Item label="CPU Cores">
-							<Tag>{status.cpuCores}</Tag>
+					<Descriptions.Item label="CPU Model">
+						<Tag className="max-w-[20rem] whitespace-normal">
+							{status.cpuModel}
+						</Tag>
+					</Descriptions.Item>
+
+					<Descriptions.Item label="CPU Cores">
+						<Tag>{status.cpuCores}</Tag>
+					</Descriptions.Item>
+
+					{status.cpuUsagePercent && (
+						<Descriptions.Item label="CPU Usage">
+							<Tag color="purple">{status.cpuUsagePercent}%</Tag>
 						</Descriptions.Item>
 					)}
 
@@ -58,6 +68,16 @@ export default function SystemStatusCard({
 						</Descriptions.Item>
 					)}
 
+					<Descriptions.Item label="Memory Usage">
+						<Tag color="geekblue">
+							{status.memUsedMB} / {status.memTotalMB} MB ({status.memPercent}%)
+						</Tag>
+					</Descriptions.Item>
+
+					<Descriptions.Item label="Load Average">
+						<Tag>{status.load.map((l) => l.toFixed(2)).join(" / ")}</Tag>
+					</Descriptions.Item>
+
 					{status.diskUsedMB && status.diskTotalMB && (
 						<Descriptions.Item label="Disk Usage">
 							<Tag color="orange">
@@ -65,6 +85,10 @@ export default function SystemStatusCard({
 							</Tag>
 						</Descriptions.Item>
 					)}
+
+					<Descriptions.Item label="Uptime">
+						<Tag color="blue">{formatUptime(status.uptime)}</Tag>
+					</Descriptions.Item>
 				</Descriptions>
 			) : (
 				<Typography.Text type="secondary">Loading...</Typography.Text>

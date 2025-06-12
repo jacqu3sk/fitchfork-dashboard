@@ -3,8 +3,18 @@ export interface SystemStatus {
 	load: [number, number, number];
 	memUsedMB: string;
 	memTotalMB: string;
+	memPercent?: string;
+
 	cpuCores?: number;
+	cpuModel?: string;
+	cpuUsagePercent?: string;
+	cpuTemp?: string;
+
 	diskUsedMB?: string;
 	diskTotalMB?: string;
-	cpuTemp?: string;
+
+	hostname?: string;
+	platform?: string;
+	arch?: string;
+	nodeVersion?: string;
 }
