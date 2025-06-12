@@ -10,13 +10,18 @@ export async function getSystemStatus(): Promise<SystemStatus> {
 
 	let diskUsedMB: string | undefined;
 	let diskTotalMB: string | undefined;
+	let diskPercentUsed: string | undefined;
 	let cpuTemp: string | undefined;
-	let cpuUsagePercent: number | undefined;
+	let cpuUsagePercent: string | undefined;
+	let perCoreLoad: string[] | undefined;
 
 	try {
 		const { total, free } = disk.checkSync("/");
 		diskUsedMB = ((total - free) / 1024 / 1024).toFixed(1);
 		diskTotalMB = (total / 1024 / 1024).toFixed(1);
+
+		const percent = (parseFloat(diskUsedMB) / parseFloat(diskTotalMB)) * 100;
+		diskPercentUsed = percent.toFixed(1);
 	} catch (e) {
 		console.error("Disk usage error:", e);
 	}
@@ -31,8 +36,11 @@ export async function getSystemStatus(): Promise<SystemStatus> {
 	}
 
 	try {
-		const load = await si.currentLoad();
-		cpuUsagePercent = load.currentLoad;
+		const loadData = await si.currentLoad();
+		cpuUsagePercent = loadData.currentLoad.toFixed(1);
+		perCoreLoad = loadData.cpus.map((cpu: { load: number }) =>
+			cpu.load.toFixed(1)
+		);
 	} catch (e) {
 		console.error("CPU load error:", e);
 	}
@@ -50,8 +58,10 @@ export async function getSystemStatus(): Promise<SystemStatus> {
 		arch: os.arch(),
 		nodeVersion: process.version,
 		cpuTemp,
-		cpuUsagePercent: cpuUsagePercent?.toFixed(1),
+		cpuUsagePercent,
+		perCoreLoad,
 		diskUsedMB,
 		diskTotalMB,
+		diskPercentUsed,
 	};
 }

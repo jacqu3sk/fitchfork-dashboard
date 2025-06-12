@@ -10,6 +10,8 @@ export interface SystemStatus {
 	cpuUsagePercent?: string;
 	cpuTemp?: string;
 
+	perCoreLoad?: string[];
+	diskPercentUsed?: string;
 	diskUsedMB?: string;
 	diskTotalMB?: string;
 

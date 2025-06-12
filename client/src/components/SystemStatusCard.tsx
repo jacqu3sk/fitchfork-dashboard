@@ -56,9 +56,7 @@ export default function SystemStatusCard({
 
 					<Descriptions.Item
 						label={
-							<Tooltip title="Operating system platform and CPU architecture">
-								Platform
-							</Tooltip>
+							<Tooltip title="OS platform and architecture">Platform</Tooltip>
 						}
 					>
 						<Tag>
@@ -94,11 +92,7 @@ export default function SystemStatusCard({
 
 					{status.cpuUsagePercent && (
 						<Descriptions.Item
-							label={
-								<Tooltip title="Current overall CPU usage as a percentage">
-									CPU Usage
-								</Tooltip>
-							}
+							label={<Tooltip title="Overall CPU usage">CPU Usage</Tooltip>}
 						>
 							<Tag color={getCpuUsageColor(status.cpuUsagePercent)}>
 								{status.cpuUsagePercent}%
@@ -106,13 +100,23 @@ export default function SystemStatusCard({
 						</Descriptions.Item>
 					)}
 
-					{status.cpuTemp && (
+					{status.perCoreLoad && (
 						<Descriptions.Item
 							label={
-								<Tooltip title="Measured temperature of the CPU">
-									CPU Temp
-								</Tooltip>
+								<Tooltip title="CPU usage per core">Per-Core Load</Tooltip>
 							}
+						>
+							{status.perCoreLoad.map((p, i) => (
+								<Tag key={i}>
+									Core {i}: {p}%
+								</Tag>
+							))}
+						</Descriptions.Item>
+					)}
+
+					{status.cpuTemp && (
+						<Descriptions.Item
+							label={<Tooltip title="CPU temperature">CPU Temp</Tooltip>}
 						>
 							<Tag color={getCpuTempColor(status.cpuTemp)}>
 								{status.cpuTemp}
@@ -122,7 +126,7 @@ export default function SystemStatusCard({
 
 					<Descriptions.Item
 						label={
-							<Tooltip title="RAM used and total available, in megabytes and percentage">
+							<Tooltip title="RAM used / total and percentage">
 								Memory Usage
 							</Tooltip>
 						}
@@ -134,7 +138,7 @@ export default function SystemStatusCard({
 
 					<Descriptions.Item
 						label={
-							<Tooltip title="System load over 1 / 5 / 15 minutes (1.00 means 100% per CPU core)">
+							<Tooltip title="Load average over 1 / 5 / 15 mins">
 								Load Average
 							</Tooltip>
 						}
@@ -145,22 +149,19 @@ export default function SystemStatusCard({
 					{status.diskUsedMB && status.diskTotalMB && (
 						<Descriptions.Item
 							label={
-								<Tooltip title="Disk space used and total available, in megabytes">
-									Disk Usage
-								</Tooltip>
+								<Tooltip title="Disk usage and percentage">Disk Usage</Tooltip>
 							}
 						>
 							<Tag color="orange">
 								{status.diskUsedMB} / {status.diskTotalMB} MB
+								{status.diskPercentUsed ? ` (${status.diskPercentUsed}%)` : ""}
 							</Tag>
 						</Descriptions.Item>
 					)}
 
 					<Descriptions.Item
 						label={
-							<Tooltip title="How long the system has been running since last boot">
-								Uptime
-							</Tooltip>
+							<Tooltip title="System uptime since last boot">Uptime</Tooltip>
 						}
 					>
 						<Tag color="blue">{formatUptime(status.uptime)}</Tag>
