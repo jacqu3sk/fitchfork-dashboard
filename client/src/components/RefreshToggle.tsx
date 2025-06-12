@@ -11,7 +11,7 @@ export default function RefreshToggle({
 	setAutoRefresh: (v: boolean) => void;
 }) {
 	return (
-		<div className="flex items-center gap-2 rounded-md border border-gray-200 dark:border-gray-700 px-2 py-1 bg-white dark:bg-gray-900">
+		<div className="flex items-center gap-2 rounded-md px-2 py-1 bg-white dark:bg-gray-900">
 			<Tooltip title="Refresh now">
 				<Button
 					type="text"
