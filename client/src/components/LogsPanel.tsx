@@ -1,16 +1,27 @@
-import { Card, Button } from "antd";
+import { Card } from "antd";
+import RefreshToggle from "@/components/RefreshToggle"; // adjust path as needed
 
 export default function LogsPanel({
 	logs,
 	onRefresh,
+	autoRefresh,
+	setAutoRefresh,
 }: {
 	logs?: string;
 	onRefresh: () => void;
+	autoRefresh: boolean;
+	setAutoRefresh: (v: boolean) => void;
 }) {
 	return (
 		<Card
 			title="Recent Logs"
-			extra={<Button onClick={onRefresh}>Refresh</Button>}
+			extra={
+				<RefreshToggle
+					onRefresh={onRefresh}
+					autoRefresh={autoRefresh}
+					setAutoRefresh={setAutoRefresh}
+				/>
+			}
 		>
 			<pre
 				style={{

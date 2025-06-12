@@ -1,4 +1,4 @@
-import { Typography, Row, Col, Switch, Space, message } from "antd";
+import { Typography, Row, Col, message } from "antd";
 import { useEffect, useState } from "react";
 
 import type { SystemStatus } from "../types/system";
@@ -100,15 +100,12 @@ export default function Dashboard() {
 				</Col>
 
 				<Col span={24}>
-					<Space style={{ marginBottom: 12 }}>
-						<Switch
-							checked={autoRefreshLogs}
-							onChange={setAutoRefreshLogs}
-							checkedChildren="Logs: Auto"
-							unCheckedChildren="Logs: Manual"
-						/>
-					</Space>
-					<LogsPanel logs={logs} onRefresh={loadLogs} />
+					<LogsPanel
+						logs={logs}
+						onRefresh={loadLogs}
+						autoRefresh={autoRefreshLogs}
+						setAutoRefresh={setAutoRefreshLogs}
+					/>
 				</Col>
 
 				<Col span={24}>
