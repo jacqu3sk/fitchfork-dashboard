@@ -8,8 +8,12 @@ const router = Router();
  * These should be validated and safe, with no user input concatenation.
  */
 const whitelist: Record<string, string> = {
-  "restart-fitchfork": "sudo /usr/bin/systemctl restart fitchfork.service",
-  "pull-latest": "cd /home/pi/dev/project && git pull",
+  "restart-fitchfork-api": "sudo /usr/bin/systemctl restart fitchfork.service",
+  "stop-fitchfork-api": "sudo /usr/bin/systemctl stop fitchfork.service",
+  "start-fitchfork-api": "sudo /usr/bin/systemctl start fitchfork.service",
+  "restart-discord-bot": "sudo /usr/bin/systemctl restart discord-bot.service",
+  "stop-discord-bot": "sudo /usr/bin/systemctl stop discord-bot.service",
+  "start-discord-bot": "sudo /usr/bin/systemctl start discord-bot.service",
   "reboot": "sudo /sbin/reboot",
 };
 
@@ -23,6 +27,7 @@ router.post("/", (req: Request, res: Response): void => {
       data: null,
     });
   }
+
 
   const shellCommand = whitelist[command];
   console.log(`[RUN] Executing command: ${command} -> ${shellCommand}`);
