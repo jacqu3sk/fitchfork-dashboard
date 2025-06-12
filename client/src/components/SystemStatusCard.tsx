@@ -122,7 +122,7 @@ export default function SystemStatusCard({
 
 					<Descriptions.Item
 						label={
-							<Tooltip title="RAM used and total available, in megabytes">
+							<Tooltip title="RAM used and total available, in megabytes and percentage">
 								Memory Usage
 							</Tooltip>
 						}
