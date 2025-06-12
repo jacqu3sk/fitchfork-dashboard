@@ -1,4 +1,9 @@
-import { Card, Button, Tag, Space, message } from "antd";
+import { Card, Button, Space, Typography, Badge, Tooltip, message } from "antd";
+import {
+	PlayCircleOutlined,
+	StopOutlined,
+	ReloadOutlined,
+} from "@ant-design/icons";
 import type { Service } from "../types/service";
 import { runCommand } from "@/services/commands";
 
@@ -24,36 +29,65 @@ export default function ServiceCard({
 		}
 	};
 
+	const isRunning = service.status === "running";
+
 	return (
 		<Card
 			type="inner"
-			title={service.name.replace(/(^\w|-\w)/g, (m) => m.toUpperCase())}
-			extra={
-				<Tag color={service.status === "running" ? "green" : "red"}>
-					{service.status}
-				</Tag>
+			bordered
+			className="rounded-xl bg-white"
+			title={
+				<Space>
+					<Typography.Text strong>
+						{service.name.replace(/(^\w|-\w)/g, (m) => m.toUpperCase())}
+					</Typography.Text>
+					<Badge
+						status={isRunning ? "success" : "error"}
+						text={service.status}
+					/>
+				</Space>
 			}
 		>
-			<Space direction="vertical">
+			<Space direction="vertical" className="w-full" size="small">
 				{service.description && (
-					<p className="text-xs text-gray-500">{service.description}</p>
+					<Typography.Text type="secondary" className="text-sm">
+						{service.description}
+					</Typography.Text>
 				)}
+
 				<Space wrap>
-					<Button
-						type="primary"
-						disabled={service.status === "running"}
-						onClick={() => toggleService("start")}
-					>
-						Start
-					</Button>
-					<Button
-						danger
-						disabled={service.status === "stopped"}
-						onClick={() => toggleService("stop")}
-					>
-						Stop
-					</Button>
-					<Button onClick={() => toggleService("restart")}>Restart</Button>
+					<Tooltip title="Start">
+						<Button
+							icon={<PlayCircleOutlined />}
+							type="primary"
+							disabled={isRunning}
+							onClick={() => toggleService("start")}
+						>
+							Start
+						</Button>
+					</Tooltip>
+
+					<Tooltip title="Stop">
+						<Button
+							icon={<StopOutlined />}
+							type="default"
+							danger
+							disabled={!isRunning}
+							onClick={() => toggleService("stop")}
+						>
+							Stop
+						</Button>
+					</Tooltip>
+
+					<Tooltip title="Restart">
+						<Button
+							icon={<ReloadOutlined />}
+							type="default"
+							onClick={() => toggleService("restart")}
+						>
+							Restart
+						</Button>
+					</Tooltip>
 				</Space>
 			</Space>
 		</Card>
