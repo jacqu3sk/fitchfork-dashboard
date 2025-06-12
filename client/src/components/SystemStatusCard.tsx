@@ -47,7 +47,7 @@ export default function SystemStatusCard({
 			}
 		>
 			{status ? (
-				<Descriptions column={1} size="small" bordered>
+				<Descriptions column={2} size="small" bordered>
 					<Descriptions.Item
 						label={<Tooltip title="Name of this machine">Hostname</Tooltip>}
 					>
@@ -100,20 +100,6 @@ export default function SystemStatusCard({
 						</Descriptions.Item>
 					)}
 
-					{status.perCoreLoad && (
-						<Descriptions.Item
-							label={
-								<Tooltip title="CPU usage per core">Per-Core Load</Tooltip>
-							}
-						>
-							{status.perCoreLoad.map((p, i) => (
-								<Tag key={i}>
-									Core {i}: {p}%
-								</Tag>
-							))}
-						</Descriptions.Item>
-					)}
-
 					{status.cpuTemp && (
 						<Descriptions.Item
 							label={<Tooltip title="CPU temperature">CPU Temp</Tooltip>}
@@ -156,6 +142,23 @@ export default function SystemStatusCard({
 								{status.diskUsedMB} / {status.diskTotalMB} MB
 								{status.diskPercentUsed ? ` (${status.diskPercentUsed}%)` : ""}
 							</Tag>
+						</Descriptions.Item>
+					)}
+
+					{status.perCoreLoad && (
+						<Descriptions.Item
+							label={
+								<Tooltip title="CPU usage per logical core">
+									Per-Core Usage
+								</Tooltip>
+							}
+							span={2}
+						>
+							{status.perCoreLoad.map((load, idx) => (
+								<Tag key={idx}>
+									Core {idx}: {load}%
+								</Tag>
+							))}
 						</Descriptions.Item>
 					)}
 
