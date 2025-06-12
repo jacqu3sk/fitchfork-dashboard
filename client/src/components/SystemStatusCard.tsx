@@ -1,15 +1,6 @@
-import {
-	Card,
-	Descriptions,
-	Button,
-	Space,
-	Tag,
-	Typography,
-	Switch,
-	Dropdown,
-} from "antd";
+import { Card, Descriptions, Tag, Typography } from "antd";
 import type { SystemStatus } from "../types/system";
-import { ReloadOutlined, DownOutlined } from "@ant-design/icons";
+import RefreshToggle from "@/components/RefreshToggle";
 
 function formatUptime(seconds: number): string {
 	const hrs = Math.floor(seconds / 3600);
@@ -32,40 +23,11 @@ export default function SystemStatusCard({
 		<Card
 			title="System Status"
 			extra={
-				<Space>
-					<Button
-						type="default"
-						icon={<ReloadOutlined />}
-						onClick={onRefresh}
-					/>
-
-					<Dropdown
-						menu={{
-							items: [
-								{
-									key: "toggle",
-									label: (
-										<div
-											className="flex justify-between items-center"
-											onClick={(e) => e.stopPropagation()}
-										>
-											<span>Auto Refresh</span>
-											<Switch
-												size="small"
-												checked={autoRefresh}
-												onChange={setAutoRefresh}
-												className="ml-2"
-											/>
-										</div>
-									),
-								},
-							],
-						}}
-						trigger={["click"]}
-					>
-						<Button type="default" icon={<DownOutlined />} />
-					</Dropdown>
-				</Space>
+				<RefreshToggle
+					onRefresh={onRefresh}
+					autoRefresh={autoRefresh}
+					setAutoRefresh={setAutoRefresh}
+				/>
 			}
 		>
 			{status ? (
@@ -89,12 +51,6 @@ export default function SystemStatusCard({
 							<Tag>{status.cpuCores}</Tag>
 						</Descriptions.Item>
 					)}
-
-					{/* {status.cpuUsagePercent !== undefined && (
-						<Descriptions.Item label="CPU Usage">
-							<Tag color="purple">{status.cpuUsagePercent.toFixed(1)}%</Tag>
-						</Descriptions.Item>
-					)} */}
 
 					{status.cpuTemp && (
 						<Descriptions.Item label="CPU Temp">
