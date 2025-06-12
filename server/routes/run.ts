@@ -11,11 +11,11 @@ const whitelist: Record<string, string> = {
   "restart-fitchfork-api": "sudo /usr/bin/systemctl restart fitchfork.service",
   "stop-fitchfork-api": "sudo /usr/bin/systemctl stop fitchfork.service",
   "start-fitchfork-api": "sudo /usr/bin/systemctl start fitchfork.service",
-  "update-fitchfork": "/home/owca/scripts/auto-update.sh",
+  "update-fitchfork-api": "/home/owca/scripts/auto-update.sh",
   "restart-discord-bot": "sudo /usr/bin/systemctl restart discord-bot.service",
   "stop-discord-bot": "sudo /usr/bin/systemctl stop discord-bot.service",
   "start-discord-bot": "sudo /usr/bin/systemctl start discord-bot.service",
-  "update-discord": "/home/owca/scripts/update-discord.sh",
+  "update-discord-bot": "/home/owca/scripts/update-discord.sh",
   "reboot": "sudo /sbin/reboot",
 };
 
