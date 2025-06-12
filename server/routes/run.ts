@@ -4,7 +4,7 @@ import { exec } from "child_process";
 const router = Router();
 
 /**
- * Whitelisted system commands. 
+ * Whitelisted system commands.
  * These should be validated and safe, with no user input concatenation.
  */
 const whitelist: Record<string, string> = {
@@ -17,7 +17,11 @@ router.post("/", (req: Request, res: Response): void => {
   const command = req.body?.command;
 
   if (typeof command !== "string" || !whitelist[command]) {
-    res.status(400).json({ success: false, error: "Invalid or unauthorized command." });
+    res.status(400).json({
+      success: false,
+      message: "Invalid or unauthorized command.",
+      data: null,
+    });
   }
 
   const shellCommand = whitelist[command];
@@ -26,12 +30,20 @@ router.post("/", (req: Request, res: Response): void => {
   exec(shellCommand, (err, stdout, stderr) => {
     if (err) {
       console.error(`[ERROR] Command failed: ${stderr || err.message}`);
-      res.status(500).json({ success: false, error: stderr || err.message });
+      return res.status(500).json({
+        success: false,
+        message: stderr || err.message,
+        data: null,
+      });
     }
 
     const result = stdout.trim() || "Command executed successfully.";
     console.log(`[SUCCESS] Command result: ${result}`);
-    res.json({ success: true, result });
+    return res.json({
+      success: true,
+      message: "Command executed successfully.",
+      data: result,
+    });
   });
 });
 
