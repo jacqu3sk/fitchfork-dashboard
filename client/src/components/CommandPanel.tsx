@@ -1,3 +1,5 @@
+// src/components/CommandPanel.tsx
+
 import { Card, Button, Space } from "antd";
 import {
 	ReloadOutlined,
@@ -5,18 +7,18 @@ import {
 	PoweroffOutlined,
 } from "@ant-design/icons";
 import React from "react";
+import { runCommand } from "@/services/commands";
 
-interface CommandPanelProps {
-	onRunCommand: (cmd: string) => Promise<void>;
-}
-
-export default function CommandPanel({ onRunCommand }: CommandPanelProps) {
+export default function CommandPanel() {
 	const [loadingCmd, setLoadingCmd] = React.useState<string | null>(null);
 
 	const handle = async (cmd: string) => {
 		setLoadingCmd(cmd);
 		try {
-			await onRunCommand(cmd);
+			const result = await runCommand(cmd);
+			console.log(result); // You can show a toast here
+		} catch (e) {
+			console.error(e);
 		} finally {
 			setLoadingCmd(null);
 		}
