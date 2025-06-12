@@ -3,27 +3,35 @@ import { exec } from "child_process";
 
 const router = Router();
 
-// Define all supported commands in one place
+/**
+ * Whitelisted system commands. 
+ * These should be validated and safe, with no user input concatenation.
+ */
 const whitelist: Record<string, string> = {
   "restart-backend": "sudo systemctl restart my-backend.service",
   "pull-latest": "cd /home/pi/dev/project && git pull",
-  "reboot": "sudo reboot", // added reboot support
+  "reboot": "sudo /sbin/reboot", // use absolute path for safety
 };
 
 router.post("/", (req: Request, res: Response): void => {
   const command = req.body?.command;
 
   if (typeof command !== "string" || !whitelist[command]) {
-    res.status(400).json({ error: "Invalid command" });
-    return;
+    res.status(400).json({ success: false, error: "Invalid or unauthorized command." });
   }
 
-  exec(whitelist[command], (err, stdout, stderr) => {
+  const shellCommand = whitelist[command];
+  console.log(`[RUN] Executing command: ${command} -> ${shellCommand}`);
+
+  exec(shellCommand, (err, stdout, stderr) => {
     if (err) {
-      res.status(500).json({ error: stderr || err.message });
-      return;
+      console.error(`[ERROR] Command failed: ${stderr || err.message}`);
+      res.status(500).json({ success: false, error: stderr || err.message });
     }
-    res.json({ result: stdout.trim() || "Command executed successfully." });
+
+    const result = stdout.trim() || "Command executed successfully.";
+    console.log(`[SUCCESS] Command result: ${result}`);
+    res.json({ success: true, result });
   });
 });
 
