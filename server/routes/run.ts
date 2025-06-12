@@ -8,9 +8,9 @@ const router = Router();
  * These should be validated and safe, with no user input concatenation.
  */
 const whitelist: Record<string, string> = {
-  "restart-fitchfork": "sudo /bin/systemctl restart fitchfork.service",
-  "pull-latest": "cd /home/pi/dev/project && sudo /usr/bin/git pull",
-  "reboot": "sudo /sbin/reboot",
+  "restart-fitchfork": "/bin/systemctl restart fitchfork.service",
+  "pull-latest": "cd /home/pi/dev/project && /usr/bin/git pull",
+  "reboot": "/sbin/reboot",
 };
 
 router.post("/", (req: Request, res: Response): void => {
