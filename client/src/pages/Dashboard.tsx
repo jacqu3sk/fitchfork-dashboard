@@ -1,14 +1,14 @@
-import { Typography, Row, Col, message } from "antd";
+import { Typography, Row, Col, message, Space, Spin } from "antd";
 import { useEffect, useState } from "react";
 
 import type { SystemStatus } from "../types/system";
 import { fetchSystemStatus, fetchLogs } from "@/services/admin";
 import CommandPanel from "@/components/CommandPanel";
 import LogsPanel from "@/components/LogsPanel";
-import ServiceManager from "@/components/ServiceManager";
 import SystemStatusCard from "@/components/SystemStatusCard";
 import type { Service } from "@/types/service";
 import { getServiceStatus } from "@/services/services";
+import ServiceCard from "@/components/ServiceCard";
 
 export default function Dashboard() {
 	const [status, setStatus] = useState<SystemStatus | null>(null);
@@ -113,7 +113,24 @@ export default function Dashboard() {
 				</Col>
 
 				<Col xs={24} md={12}>
-					<CommandPanel />
+					<Space direction="vertical" size="large" style={{ width: "100%" }}>
+						<CommandPanel />
+
+						{services.length === 0 ? (
+							<Spin />
+						) : (
+							<>
+								<ServiceCard
+									service={services.find((s) => s.name === "fitchfork-api")!}
+									onRefresh={loadServices}
+								/>
+								<ServiceCard
+									service={services.find((s) => s.name === "discord-bot")!}
+									onRefresh={loadServices}
+								/>
+							</>
+						)}
+					</Space>
 				</Col>
 
 				<Col span={24}>
@@ -123,10 +140,6 @@ export default function Dashboard() {
 						autoRefresh={autoRefreshLogs}
 						setAutoRefresh={setAutoRefreshLogs}
 					/>
-				</Col>
-
-				<Col span={24}>
-					<ServiceManager services={services} onRefresh={loadServices} />
 				</Col>
 			</Row>
 		</div>
