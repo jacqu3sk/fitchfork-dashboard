@@ -40,7 +40,11 @@ export default function ServiceManager() {
 	};
 
 	useEffect(() => {
-		loadStatuses();
+		loadStatuses(); // initial fetch
+		const interval = setInterval(() => {
+			loadStatuses(); // periodic fetch
+		}, 1000);
+		return () => clearInterval(interval); // cleanup
 	}, []);
 
 	const toggleService = useCallback(
