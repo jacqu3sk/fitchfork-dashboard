@@ -47,7 +47,12 @@ export default function SystemStatusCard({
 			}
 		>
 			{status ? (
-				<Descriptions column={2} size="small" bordered>
+				<Descriptions
+					column={1}
+					size="small"
+					bordered
+					labelStyle={{ width: "180px" }}
+				>
 					<Descriptions.Item
 						label={<Tooltip title="Name of this machine">Hostname</Tooltip>}
 					>
@@ -152,13 +157,8 @@ export default function SystemStatusCard({
 									Per-Core Usage
 								</Tooltip>
 							}
-							span={2}
 						>
-							{status.perCoreLoad.map((load, idx) => (
-								<Tag key={idx}>
-									Core {idx}: {load}%
-								</Tag>
-							))}
+							<Tag>{status.perCoreLoad.map((p) => `${p}%`).join(" / ")}</Tag>
 						</Descriptions.Item>
 					)}
 
