@@ -82,7 +82,7 @@ export default function Dashboard() {
 	}, [autoRefreshLogs]);
 
 	return (
-		<div className="p-6">
+		<div className="p-4">
 			<Typography.Title level={2}>FitchFork Server Dashboard</Typography.Title>
 
 			<Row gutter={[24, 24]}>

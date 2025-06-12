@@ -64,7 +64,7 @@ export default function AppLayout() {
 					/>
 				</Header>
 				<Content className="overflow-auto">
-					<div className="p-4">
+					<div>
 						<Outlet />
 					</div>
 				</Content>

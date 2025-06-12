@@ -1,4 +1,4 @@
-import { Avatar, Button, Dropdown, Typography, Breadcrumb } from "antd";
+import { Button, Dropdown, Typography, Breadcrumb } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -70,12 +70,9 @@ export default function HeaderBar({
 						}))}
 					/>
 					<Dropdown menu={{ items }} trigger={["click"]}>
-						<div className="flex items-center gap-2 cursor-pointer h-full">
-							<Avatar size="large" src="/profile.jpeg" />
-							<Text className="text-gray-700 dark:text-gray-200 font-medium">
-								{"User"}
-							</Text>
-						</div>
+						<Text className="cursor-pointer text-gray-700 dark:text-gray-200 font-medium">
+							{user?.username ?? "User"}
+						</Text>
 					</Dropdown>
 				</>
 			)}
