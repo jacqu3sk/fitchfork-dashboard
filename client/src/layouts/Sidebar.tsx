@@ -42,60 +42,72 @@ export default function Sidebar({
 	isMobile,
 	setCollapsed,
 	closeMobile,
+	forceCollapsed = false, // optional fallback
 }: {
 	collapsed: boolean;
 	isMobile: boolean;
 	setCollapsed: (value: boolean) => void;
 	closeMobile: () => void;
+	forceCollapsed?: boolean;
 }) {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { logout } = useAuth();
 
+	const handleClick = (key: string) => {
+		if (key === "logout") {
+			logout();
+			navigate("/login");
+		} else {
+			navigate(key);
+		}
+		if (isMobile) closeMobile();
+	};
+
 	return (
-		<div className="h-full flex flex-col justify-between">
+		<div className="bg-white dark:bg-gray-950 h-full flex flex-col justify-between">
 			<div>
 				<div
-					className="flex justify-center py-4 cursor-pointer"
+					className="py-4 mb-4 flex items-center justify-center cursor-pointer"
 					onClick={closeMobile}
 				>
 					<Logo collapsed={collapsed && !isMobile} />
 				</div>
 
-				<Menu
-					mode="inline"
-					selectedKeys={[location.pathname]}
-					items={menuItems}
-					onClick={({ key }) => {
-						navigate(key);
-						if (isMobile) closeMobile();
-					}}
-					inlineCollapsed={!isMobile && collapsed}
-					className="!bg-transparent !border-none px-2"
-					style={{ borderRight: "none" }}
-				/>
+				<div className="px-2">
+					<Menu
+						mode="inline"
+						theme="light"
+						selectedKeys={[location.pathname]}
+						items={menuItems}
+						onClick={({ key }) => handleClick(key)}
+						inlineCollapsed={!isMobile && collapsed}
+						className="!bg-transparent !p-0 mt-2"
+						style={{ border: "none" }}
+					/>
+				</div>
 			</div>
 
 			<div className="px-2 pb-4">
 				<Menu
 					mode="inline"
+					theme="light"
 					selectedKeys={[location.pathname]}
 					items={bottomItems}
-					onClick={({ key }) => {
-						if (key === "logout") logout();
-						if (isMobile) closeMobile();
-					}}
-					className="!bg-transparent !border-none"
-					style={{ borderRight: "none" }}
+					onClick={({ key }) => handleClick(key)}
+					className="!bg-transparent"
+					style={{ border: "none" }}
 				/>
-				{!isMobile && (
-					<div className="mt-4 flex justify-center">
+
+				{!isMobile && !forceCollapsed && (
+					<div className="px-1 mt-3">
 						<Button
+							block
 							type="default"
+							onClick={() => setCollapsed(!collapsed)}
 							icon={
 								collapsed ? <DoubleRightOutlined /> : <DoubleLeftOutlined />
 							}
-							onClick={() => setCollapsed(!collapsed)}
 						>
 							{collapsed ? "" : "Collapse"}
 						</Button>

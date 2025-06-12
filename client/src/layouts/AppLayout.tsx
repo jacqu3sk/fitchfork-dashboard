@@ -39,7 +39,6 @@ export default function AppLayout() {
 					width={240}
 					closable={false}
 					className="!p-0"
-					bodyStyle={{ padding: 0 }}
 				>
 					{sidebar}
 				</Drawer>

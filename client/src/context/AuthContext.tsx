@@ -9,6 +9,7 @@ interface AuthContextType {
 	login: (request: LoginRequest) => Promise<ApiResponse<LoginResponse | null>>;
 	logout: () => void;
 	isExpired: () => boolean;
+	user: { username: string } | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -17,6 +18,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [authenticated, setAuthenticated] = useState(false);
+	const [user, setUser] = useState<{ username: string } | null>(null);
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
@@ -27,9 +29,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 
 		try {
-			const { token, expires_at } = JSON.parse(stored);
+			const { token, expires_at, username } = JSON.parse(stored);
 			if (token && expires_at && new Date(expires_at) > new Date()) {
 				setAuthenticated(true);
+				setUser({ username });
 			} else {
 				localStorage.removeItem("auth");
 			}
@@ -46,17 +49,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const res = await AuthService.login(request);
 			if (res.success && res.data) {
-				const { token, expiresIn } = res.data;
+				const { token, expiresIn, username } = res.data;
 
 				localStorage.setItem(
 					"auth",
 					JSON.stringify({
 						token,
 						expires_at: expiresIn,
+						username,
 					})
 				);
 
 				setAuthenticated(true);
+				setUser({ username });
 			}
 			return res;
 		} catch (err: unknown) {
@@ -75,6 +80,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const logout = () => {
 		localStorage.removeItem("auth");
 		setAuthenticated(false);
+		setUser(null);
 		window.location.href = "/login";
 	};
 
@@ -99,6 +105,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				login,
 				logout,
 				isExpired,
+				user,
 			}}
 		>
 			{children}

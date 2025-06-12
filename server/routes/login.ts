@@ -18,7 +18,7 @@ router.post("/", (req, res) => {
 		const token = jwt.sign({ username }, JWT_SECRET, { expiresIn: "6h" });
 		res.json({
 			success: true,
-			data: { token, expiresIn: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString() },
+			data: { token, expiresIn: new Date(Date.now() + 6 * 60 * 60 * 1000).toISOString(), username },
 			message: "Login successful",
 		});
 	}

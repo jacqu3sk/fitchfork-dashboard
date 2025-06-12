@@ -15,7 +15,7 @@ export default function HeaderBar({
 	onMenuClick: () => void;
 }) {
 	const navigate = useNavigate();
-	const { logout } = useAuth();
+	const { user, logout } = useAuth();
 	const { toggleDarkMode } = useTheme();
 	const breadcrumbs = useBreadcrumbs();
 
@@ -45,12 +45,9 @@ export default function HeaderBar({
 			{isMobile ? (
 				<>
 					<Dropdown menu={{ items }} trigger={["click"]}>
-						<div className="flex items-center gap-2 cursor-pointer h-full">
-							<Avatar size="large" src="/profile.jpeg" />
-							<Text className="text-gray-700 dark:text-gray-200 font-medium">
-								{"User"}
-							</Text>
-						</div>
+						<Text className="cursor-pointer text-gray-700 dark:text-gray-200 font-medium">
+							{user?.username ?? "User"}
+						</Text>
 					</Dropdown>
 					<Button
 						type="text"

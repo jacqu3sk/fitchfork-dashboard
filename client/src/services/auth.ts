@@ -8,7 +8,8 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     token: string,
-    expiresIn: string
+    expiresIn: string,
+    username: string,
 }
 
 export const AuthService = {
