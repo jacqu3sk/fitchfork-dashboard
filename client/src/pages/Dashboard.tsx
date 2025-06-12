@@ -2,11 +2,7 @@ import { Typography, Row, Col, message } from "antd";
 import { useEffect, useState } from "react";
 
 import type { SystemStatus } from "../types/system";
-import {
-	fetchSystemStatus,
-	fetchLogs,
-	runAdminCommand,
-} from "@/services/admin";
+import { fetchSystemStatus, fetchLogs } from "@/services/admin";
 import CommandPanel from "@/components/CommandPanel";
 import LogsPanel from "@/components/LogsPanel";
 import ServiceManager from "@/components/ServiceManager";
@@ -37,19 +33,6 @@ export default function Dashboard() {
 			setLogs(logData);
 		} catch {
 			message.error("Failed to load logs");
-		}
-	};
-
-	const runCommand = async (command: string) => {
-		try {
-			const result = await runAdminCommand(command);
-			message.success(result || "Command executed");
-		} catch (err) {
-			if (err instanceof Error) {
-				message.error(err.message);
-			} else {
-				message.error("Command failed");
-			}
 		}
 	};
 
@@ -96,7 +79,7 @@ export default function Dashboard() {
 				</Col>
 
 				<Col xs={24} md={12}>
-					<CommandPanel onRunCommand={runCommand} />
+					<CommandPanel />
 				</Col>
 
 				<Col span={24}>
