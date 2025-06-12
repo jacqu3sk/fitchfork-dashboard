@@ -47,12 +47,7 @@ export default function SystemStatusCard({
 			}
 		>
 			{status ? (
-				<Descriptions
-					column={1}
-					size="small"
-					bordered
-					labelStyle={{ width: "180px" }}
-				>
+				<Descriptions column={1} size="small" bordered>
 					<Descriptions.Item
 						label={<Tooltip title="Name of this machine">Hostname</Tooltip>}
 					>
