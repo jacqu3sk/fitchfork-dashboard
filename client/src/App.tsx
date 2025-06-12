@@ -15,19 +15,27 @@ export default function App() {
 	return (
 		<BrowserRouter>
 			<Routes>
+				{/* Login route */}
 				<Route
 					path="/login"
 					element={needsLogin ? <Login /> : <Navigate to="/" replace />}
 				/>
 
+				{/* Protected routes */}
 				<Route
+					path="/"
 					element={
 						needsLogin ? <Navigate to="/login" replace /> : <AppLayout />
 					}
 				>
-					<Route path="/dashboard" element={<Dashboard />} />
-					<Route path="/services" element={<Services />} />
+					{/* Default route when logged in */}
+					<Route index element={<Navigate to="/dashboard" replace />} />
+					<Route path="dashboard" element={<Dashboard />} />
+					<Route path="services" element={<Services />} />
 				</Route>
+
+				{/* Catch-all route (optional) */}
+				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>
 		</BrowserRouter>
 	);

@@ -5,7 +5,7 @@ import type { Service } from "../types/service";
 const MOCK_SERVICES: Service[] = [
 	{ name: "nginx", status: "running" },
 	{ name: "postgresql", status: "running" },
-	{ name: "backend-api", status: "stopped" },
+	{ name: "fitchfork-api", status: "stopped" },
 	{ name: "discord-bot", status: "running" },
 ];
 
