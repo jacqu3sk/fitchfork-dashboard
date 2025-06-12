@@ -23,33 +23,44 @@ export default function CommandPanel({ onRunCommand }: CommandPanelProps) {
 	};
 
 	return (
-		<Card title="Commands" style={{ padding: "1rem" }}>
-			<Space direction="vertical" style={{ width: "100%" }}>
-				<Button.Group>
-					<Button
-						type="primary"
-						icon={<SyncOutlined />}
-						loading={loadingCmd === "restart-backend"}
-						onClick={() => handle("restart-backend")}
-					>
-						Restart Backend
-					</Button>
-					<Button
-						icon={<ReloadOutlined />}
-						loading={loadingCmd === "pull-latest"}
-						onClick={() => handle("pull-latest")}
-					>
-						Git Pull Latest
-					</Button>
-					<Button
-						danger
-						icon={<PoweroffOutlined />}
-						loading={loadingCmd === "reboot"}
-						onClick={() => handle("reboot")}
-					>
-						Reboot Server
-					</Button>
-				</Button.Group>
+		<Card
+			title="Server Commands"
+			className="shadow-sm dark:bg-gray-950 dark:border-gray-800"
+		>
+			<Space direction="vertical" size="middle" className="w-full">
+				<Button
+					block
+					type="primary"
+					icon={<SyncOutlined />}
+					loading={loadingCmd === "restart-backend"}
+					onClick={() => handle("restart-backend")}
+					className="font-semibold"
+				>
+					Restart Backend
+				</Button>
+
+				<Button
+					block
+					type="default"
+					icon={<ReloadOutlined />}
+					loading={loadingCmd === "pull-latest"}
+					onClick={() => handle("pull-latest")}
+					className="font-medium"
+				>
+					Git Pull Latest
+				</Button>
+
+				<Button
+					block
+					danger
+					type="primary"
+					icon={<PoweroffOutlined />}
+					loading={loadingCmd === "reboot"}
+					onClick={() => handle("reboot")}
+					className="font-medium"
+				>
+					Reboot Server
+				</Button>
 			</Space>
 		</Card>
 	);
