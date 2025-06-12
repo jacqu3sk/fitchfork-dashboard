@@ -100,7 +100,11 @@ export default function Dashboard() {
 
 	return (
 		<div className="p-4 sm:p-6">
-			<Typography.Title level={2}>FitchFork Server Dashboard</Typography.Title>
+			<Typography.Title level={2}>Dashboard</Typography.Title>
+			<Typography.Paragraph type="secondary">
+				Monitor system status, manage services, and view logs for your FitchFork
+				server.
+			</Typography.Paragraph>
 
 			<Row gutter={[24, 24]}>
 				<Col xs={24} md={12}>
