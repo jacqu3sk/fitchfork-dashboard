@@ -8,7 +8,7 @@ const router = Router();
  * These should be validated and safe, with no user input concatenation.
  */
 const whitelist: Record<string, string> = {
-  "restart-backend": "sudo systemctl restart my-backend.service",
+  "restart-fitchfork": "sudo systemctl restart fitchfork.service",
   "pull-latest": "cd /home/pi/dev/project && git pull",
   "reboot": "sudo /sbin/reboot", // use absolute path for safety
 };
