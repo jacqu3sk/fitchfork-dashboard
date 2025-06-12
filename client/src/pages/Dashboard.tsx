@@ -7,6 +7,8 @@ import CommandPanel from "@/components/CommandPanel";
 import LogsPanel from "@/components/LogsPanel";
 import ServiceManager from "@/components/ServiceManager";
 import SystemStatusCard from "@/components/SystemStatusCard";
+import type { Service } from "@/types/service";
+import { getServiceStatus } from "@/services/services";
 
 export default function Dashboard() {
 	const [status, setStatus] = useState<SystemStatus | null>(null);
@@ -17,6 +19,34 @@ export default function Dashboard() {
 	const [autoRefreshLogs, setAutoRefreshLogs] = useState(
 		localStorage.getItem("autoRefreshLogs") === "true"
 	);
+	const [services, setServices] = useState<Service[]>([]);
+
+	const loadServices = async () => {
+		const updated: Service[] = [];
+
+		for (const svc of [
+			{ name: "fitchfork-api", systemd: "fitchfork.service" },
+			{ name: "discord-bot", systemd: "discord-bot.service" },
+		]) {
+			try {
+				const status = await getServiceStatus(svc.systemd);
+				updated.push({
+					name: svc.name,
+					status: status.ActiveState === "active" ? "running" : "stopped",
+					description: status.Description,
+					pid: status.ExecMainPID,
+					activeState: status.ActiveState,
+					subState: status.SubState,
+				});
+			} catch {
+				updated.push({
+					name: svc.name,
+					status: "stopped",
+				});
+			}
+		}
+		setServices(updated);
+	};
 
 	const loadStatus = async () => {
 		try {
@@ -39,12 +69,15 @@ export default function Dashboard() {
 	useEffect(() => {
 		loadStatus();
 		loadLogs();
+		loadServices(); // load services on first render
 
 		let statusInterval: number | undefined;
 		let logsInterval: number | undefined;
+		let servicesInterval: number | undefined;
 
 		if (autoRefresh) {
 			statusInterval = window.setInterval(loadStatus, 1000);
+			servicesInterval = window.setInterval(loadServices, 1000);
 		}
 		if (autoRefreshLogs) {
 			logsInterval = window.setInterval(loadLogs, 3000);
@@ -53,6 +86,7 @@ export default function Dashboard() {
 		return () => {
 			if (statusInterval) clearInterval(statusInterval);
 			if (logsInterval) clearInterval(logsInterval);
+			if (servicesInterval) clearInterval(servicesInterval);
 		};
 	}, [autoRefresh, autoRefreshLogs]);
 
@@ -92,7 +126,7 @@ export default function Dashboard() {
 				</Col>
 
 				<Col span={24}>
-					<ServiceManager />
+					<ServiceManager services={services} onRefresh={loadServices} />
 				</Col>
 			</Row>
 		</div>
