@@ -2,7 +2,6 @@ import { Card } from "antd";
 import { useEffect, useRef } from "react";
 import hljs from "highlight.js/lib/core";
 import plaintext from "highlight.js/lib/languages/plaintext";
-import "highlight.js/styles/atom-one-dark.css"; // or any other theme
 import RefreshToggle from "@/components/RefreshToggle";
 
 hljs.registerLanguage("plaintext", plaintext);
@@ -41,8 +40,6 @@ export default function LogsPanel({
 				ref={preRef}
 				className="hljs"
 				style={{
-					backgroundColor: "#1e1e1e",
-					color: "#d4d4d4",
 					fontFamily: "Consolas, Menlo, monospace",
 					padding: "1rem",
 					borderRadius: "4px",
