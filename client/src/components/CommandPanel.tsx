@@ -1,11 +1,7 @@
 // src/components/CommandPanel.tsx
 
 import { Card, Button, Space } from "antd";
-import {
-	ReloadOutlined,
-	SyncOutlined,
-	PoweroffOutlined,
-} from "@ant-design/icons";
+import { PoweroffOutlined } from "@ant-design/icons";
 import React from "react";
 import { runCommand } from "@/services/commands";
 
@@ -27,31 +23,9 @@ export default function CommandPanel() {
 	return (
 		<Card
 			title="Server Commands"
-			className="shadow-sm dark:bg-gray-950 dark:border-gray-800"
+			className="dark:bg-gray-950 dark:border-gray-800"
 		>
 			<Space direction="vertical" size="middle" className="w-full">
-				<Button
-					block
-					type="primary"
-					icon={<SyncOutlined />}
-					loading={loadingCmd === "restart-fitchfork"}
-					onClick={() => handle("restart-fitchfork")}
-					className="font-semibold"
-				>
-					Restart FitchFork API
-				</Button>
-
-				<Button
-					block
-					type="default"
-					icon={<ReloadOutlined />}
-					loading={loadingCmd === "pull-latest"}
-					onClick={() => handle("pull-latest")}
-					className="font-medium"
-				>
-					Git Pull Latest
-				</Button>
-
 				<Button
 					block
 					danger
