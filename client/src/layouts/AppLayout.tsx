@@ -57,7 +57,7 @@ export default function AppLayout() {
 			)}
 
 			<Layout className="flex flex-col w-full h-screen !bg-white dark:!bg-gray-950">
-				<Header className="!bg-transparent border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6">
+				<Header className="!bg-transparent border-b border-gray-200 dark:border-gray-800 !px-4 sm:px-6">
 					<HeaderBar
 						isMobile={isMobile}
 						onMenuClick={() => setMobileSidebarVisible(true)}
